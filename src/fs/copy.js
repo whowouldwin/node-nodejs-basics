@@ -1,6 +1,6 @@
-import fs, {access} from 'fs/promises';
+import fs, { access } from 'fs/promises';
 import path from 'path';
-import {fileURLToPath} from 'url';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -10,18 +10,16 @@ const copy = async () => {
     const srcFolder = path.join(__dirname, 'files');
     const destFolder = path.join(__dirname, 'files_copy');
     try {
-      await access(srcFolder)
-    }
-    catch (e) {
+      await access(srcFolder);
+    } catch (e) {
       throw new Error(`FS operation failed`);
     }
     try {
       await access(destFolder)
       throw new Error(`FS operation failed`);
-    }
-    catch (e) {
+    } catch (e) {
       if (e.code !== 'ENOENT') {
-        throw e;
+        throw new Error(`FS operation failed`);
       }
     }
     await fs.mkdir(destFolder)
@@ -33,10 +31,10 @@ const copy = async () => {
         await fs.copyFile(sourceFile, destFile);
       })
     );
-    console.log(`Files copied successfully`);
+    console.log('Files copied successfully');
   }
   catch (e) {
-    console.error(e);
+    console.error(e.message)
   }
 };
 await copy();

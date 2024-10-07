@@ -9,8 +9,14 @@ const __dirname = path.dirname(__filename);
 const write = async () => {
     const filepath = path.join(__dirname, './files', 'fileToWrite.txt');
     console.log('Enter the text you want to write to the file to the file');
-    console.log('Press Cmd+C (Linux) to end the input')
+    console.log('Press Cmd+C (Linux) or write the exit to end the input')
     try {
+      process.stdin.on('data', (chunk) => {
+        if (chunk.toString().trim().toLowerCase() === 'exit') {
+          process.exit();
+        }
+      })
+
       await pipeline(
         process.stdin,
         createWriteStream(filepath)
